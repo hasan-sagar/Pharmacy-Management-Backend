@@ -32,25 +32,37 @@ export class CategoryService {
     }
   }
 
-  //get cat with user
-  async getCategory(catId: string): Promise<any> {
-    try {
-      const category = await this.categoryModel
-        .findById(catId)
-        .populate('user')
-        .exec();
+  //get all categories by user with search and pagination
+  async getCategories(searchQuery?: string, page: number = 1, userId?: string) {
+    const query: any = {};
 
-      if (!category) {
-        throw new HttpException('Category not found', HttpStatus.NOT_FOUND);
-      }
-
-      return category;
-    } catch (error) {
-      console.error(error);
-      throw new HttpException(
-        'Error fetching category',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    if (searchQuery) {
+      const searchKeyRegex = new RegExp(searchQuery, 'i');
+      query['name'] = searchKeyRegex;
     }
+
+    if (userId) {
+      query['user'] = userId;
+    }
+
+    const pageSize = 10;
+    const skip = (page - 1) * pageSize;
+
+    const categories = await this.categoryModel
+      .find(query)
+      .skip(skip)
+      .limit(pageSize)
+      .lean();
+
+    const total = await this.categoryModel.countDocuments(query);
+
+    return {
+      data: categories,
+      pagination: {
+        total,
+        page,
+        pages: Math.ceil(total / pageSize),
+      },
+    };
   }
 }

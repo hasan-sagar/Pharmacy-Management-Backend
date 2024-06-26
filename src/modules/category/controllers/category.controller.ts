@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+  Query,
+} from '@nestjs/common';
 import { CategoryService } from '../services/category.service';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/core/utils/jwt.guard';
@@ -24,8 +32,17 @@ export class CategoryController {
     );
   }
 
-  @Get(':catId')
-  async getCategory(@Param('catId') catId: string): Promise<any> {
-    return await this.categoryService.getCategory(catId);
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  async getCategories(
+    @User() user: UserDecoratorModel,
+    @Query('query') searchQuery?: string,
+    @Query('page') page: number = 1,
+  ) {
+    return await this.categoryService.getCategories(
+      searchQuery,
+      page,
+      user.userId,
+    );
   }
 }
