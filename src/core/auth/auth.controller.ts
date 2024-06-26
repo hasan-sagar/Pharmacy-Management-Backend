@@ -2,7 +2,6 @@ import { Controller, Post, Body } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { OAuth2Client } from 'google-auth-library';
 import { AuthService } from './auth.service';
-import { UserModel } from 'src/models/user-model';
 import { ResponseModel } from 'src/models/response-model';
 
 @ApiTags('Authentication')
