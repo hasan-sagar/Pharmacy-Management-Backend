@@ -33,7 +33,11 @@ export class CategoryService {
   }
 
   //get all categories by user with search and pagination
-  async getCategories(searchQuery?: string, page: number = 1, userId?: string) {
+  async getCategories(
+    searchQuery?: string,
+    page: number = 1,
+    userId?: string,
+  ): Promise<any> {
     const query: any = {};
 
     if (searchQuery) {
@@ -64,5 +68,49 @@ export class CategoryService {
         pages: Math.ceil(total / pageSize),
       },
     };
+  }
+
+  //get a single category
+  async getSingleCategory(categoryId: string): Promise<CategoryModel> {
+    try {
+      return await this.categoryModel.findById(categoryId);
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('Category not found', HttpStatus.NOT_FOUND);
+    }
+  }
+
+  //delete a category
+  async deleteSingleCateogry(categoryId: string): Promise<ResponseModel> {
+    try {
+      await this.categoryModel.findByIdAndDelete(categoryId);
+      return {
+        message: 'Category deleted',
+        status: HttpStatus.OK,
+      };
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('Category not found', HttpStatus.NOT_FOUND);
+    }
+  }
+
+  //update a category
+  async updateSingleCategory(
+    categoryId: string,
+    categoryDetails: CategoryModel,
+  ): Promise<ResponseModel> {
+    try {
+      await this.categoryModel.findByIdAndUpdate(categoryId, categoryDetails, {
+        new: true,
+      });
+
+      return {
+        message: 'Category updated',
+        status: HttpStatus.CREATED,
+      };
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('Category not found', HttpStatus.NOT_FOUND);
+    }
   }
 }
