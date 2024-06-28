@@ -24,7 +24,7 @@ import { UpdateProductDto } from '../dto/update-products.dto';
 export class ProductsController {
   constructor(private readonly productService: ProductsService) {}
 
-  @Post()
+  @Post('purchase')
   @UseGuards(JwtAuthGuard)
   async purchaseNewProduct(
     @User() user: UserDecoratorModel,

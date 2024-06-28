@@ -17,6 +17,7 @@ import { CreateSuppliersDto } from '../dto/create-supplier.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ResponseModel } from 'src/models/response-model';
 import { UpdateSuppliersDto } from '../dto/update-supplier.dto';
+import { SupplierModel } from 'src/models/suplier-model';
 
 @ApiTags('Suppliers')
 @Controller('suppliers')
@@ -73,5 +74,13 @@ export class SuppliersController {
       supplierId,
       supplierDetails,
     );
+  }
+
+  @Get('get/all')
+  @UseGuards(JwtAuthGuard)
+  async getAllSuppliers(
+    @User() user: UserDecoratorModel,
+  ): Promise<SupplierModel[]> {
+    return await this.supplierService.getAllSuppliers(user.userId);
   }
 }

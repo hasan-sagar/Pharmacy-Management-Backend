@@ -113,4 +113,16 @@ export class BrandsService {
       throw new HttpException('Brand not found', HttpStatus.NOT_FOUND);
     }
   }
+
+  //get all brands
+  async getAllBrands(userId: string): Promise<BrandModel[]> {
+    try {
+      return await this.brandsModel.find({
+        user: userId,
+      });
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('Brand not found', HttpStatus.NOT_FOUND);
+    }
+  }
 }

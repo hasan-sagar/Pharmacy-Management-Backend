@@ -17,6 +17,7 @@ import { CreateBrandsDto } from '../dto/create-brands.dto';
 import { ResponseModel } from 'src/models/response-model';
 import { ApiTags } from '@nestjs/swagger';
 import { UpdateBrandsDto } from '../dto/update-brand.dto';
+import { BrandModel } from 'src/models/brand-model';
 
 @ApiTags('Brands')
 @Controller('brands')
@@ -61,5 +62,13 @@ export class BrandsController {
     @Body() brandDetails: UpdateBrandsDto,
   ): Promise<ResponseModel> {
     return await this.brandService.updateSingleBrand(brandId, brandDetails);
+  }
+
+  @Get('get/all')
+  @UseGuards(JwtAuthGuard)
+  async getAllCategories(
+    @User() user: UserDecoratorModel,
+  ): Promise<BrandModel[]> {
+    return await this.brandService.getAllBrands(user.userId);
   }
 }

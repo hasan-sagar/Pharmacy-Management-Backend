@@ -76,4 +76,12 @@ export class CategoryController {
       categoryDetails,
     );
   }
+
+  @Get('get/all')
+  @UseGuards(JwtAuthGuard)
+  async getAllCategories(
+    @User() user: UserDecoratorModel,
+  ): Promise<CategoryModel[]> {
+    return await this.categoryService.getAllCategories(user.userId);
+  }
 }

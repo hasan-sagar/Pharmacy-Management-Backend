@@ -115,4 +115,16 @@ export class SuppliersService {
       throw new HttpException('Supplier not found', HttpStatus.NOT_FOUND);
     }
   }
+
+  //get all suppliers
+  async getAllSuppliers(userId: string): Promise<SupplierModel[]> {
+    try {
+      return await this.supplierModel.find({
+        user: userId,
+      });
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('Supplier not found', HttpStatus.NOT_FOUND);
+    }
+  }
 }

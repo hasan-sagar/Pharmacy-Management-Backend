@@ -113,4 +113,16 @@ export class CategoryService {
       throw new HttpException('Category not found', HttpStatus.NOT_FOUND);
     }
   }
+
+  //get all categories
+  async getAllCategories(userId: string): Promise<CategoryModel[]> {
+    try {
+      return await this.categoryModel.find({
+        user: userId,
+      });
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('Category not found', HttpStatus.NOT_FOUND);
+    }
+  }
 }
