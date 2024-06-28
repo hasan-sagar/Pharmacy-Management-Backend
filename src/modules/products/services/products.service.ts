@@ -230,4 +230,52 @@ export class ProductsService {
       throw new HttpException('Products not found', HttpStatus.NOT_FOUND);
     }
   }
+
+  // expired medicines list
+  async getExpiredProducts(
+    searchQuery?: string,
+    page: number = 1,
+    userId?: string,
+  ): Promise<any> {
+    try {
+      const query: any = {};
+
+      if (searchQuery) {
+        const searchKeyRegex = new RegExp(searchQuery, 'i');
+        query['medicineName'] = searchKeyRegex;
+      }
+
+      if (userId) {
+        query['user'] = userId;
+      }
+
+      query['expireDate'] = { $lt: new Date() };
+
+      const pageSize = 10;
+      const skip = (page - 1) * pageSize;
+
+      const products = await this.productsModel
+        .find(query)
+        .populate('category', 'name')
+        .populate('supplier', 'name')
+        .populate('brands', 'name')
+        .skip(skip)
+        .limit(pageSize)
+        .lean();
+
+      const total = await this.productsModel.countDocuments(query);
+
+      return {
+        data: products,
+        pagination: {
+          total,
+          page,
+          pages: Math.ceil(total / pageSize),
+        },
+      };
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('Products not found', HttpStatus.NOT_FOUND);
+    }
+  }
 }

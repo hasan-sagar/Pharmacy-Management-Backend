@@ -100,4 +100,18 @@ export class ProductsController {
       user.userId,
     );
   }
+
+  @Get('get/expired')
+  @UseGuards(JwtAuthGuard)
+  async getExpiredProducts(
+    @User() user: UserDecoratorModel,
+    @Query('query') searchQuery?: string,
+    @Query('page') page: number = 1,
+  ): Promise<any> {
+    return await this.productService.getExpiredProducts(
+      searchQuery,
+      page,
+      user.userId,
+    );
+  }
 }
