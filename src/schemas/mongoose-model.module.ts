@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Category, CateogrySchema } from './category.schema';
 import { Brands, BrandsSchema } from './brands.schema';
 import { Supplier, SupplierSchema } from './supplier.schema';
+import { Products, ProductsSchema } from './products.schema';
 
 const MODELS = [
   {
@@ -21,6 +22,10 @@ const MODELS = [
   {
     name: Supplier.name,
     schema: SupplierSchema,
+  },
+  {
+    name: Products.name,
+    schema: ProductsSchema,
   },
 ];
 
