@@ -72,4 +72,32 @@ export class ProductsController {
       productDetails,
     );
   }
+
+  @Get('get/stock')
+  @UseGuards(JwtAuthGuard)
+  async getInStockProducts(
+    @User() user: UserDecoratorModel,
+    @Query('query') searchQuery?: string,
+    @Query('page') page: number = 1,
+  ): Promise<any> {
+    return await this.productService.getInStockProducts(
+      searchQuery,
+      page,
+      user.userId,
+    );
+  }
+
+  @Get('get/stock-out')
+  @UseGuards(JwtAuthGuard)
+  async getOutofStockProducts(
+    @User() user: UserDecoratorModel,
+    @Query('query') searchQuery?: string,
+    @Query('page') page: number = 1,
+  ): Promise<any> {
+    return await this.productService.getOutofStockProducts(
+      searchQuery,
+      page,
+      user.userId,
+    );
+  }
 }
