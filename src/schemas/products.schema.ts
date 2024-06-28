@@ -26,7 +26,7 @@ export class Products {
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Suppliers',
+    ref: 'Supplier',
     required: true,
   })
   supplier: Supplier;

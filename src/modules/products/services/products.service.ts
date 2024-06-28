@@ -43,6 +43,50 @@ export class ProductsService {
   }
 
   //get all products by user with search and paginate
+  // async getProducts(
+  //   searchQuery?: string,
+  //   page: number = 1,
+  //   userId?: string,
+  // ): Promise<any> {
+  //   try {
+  //     const query: any = {};
+
+  //     if (searchQuery) {
+  //       const searchKeyRegex = new RegExp(searchQuery, 'i');
+  //       query['name'] = searchKeyRegex;
+  //     }
+
+  //     if (userId) {
+  //       query['user'] = userId;
+  //     }
+
+  //     const pageSize = 10;
+  //     const skip = (page - 1) * pageSize;
+
+  //     const products = await this.productsModel
+  //       .find(query)
+  //       .skip(skip)
+  //       .limit(pageSize)
+  //       .lean();
+
+  //     const total = await this.productsModel.countDocuments(products);
+
+  //     return {
+  //       data: products,
+  //       pagination: {
+  //         total,
+  //         page,
+  //         pages: Math.ceil(total / pageSize),
+  //       },
+  //     };
+  //   } catch (error) {
+  //     console.log(error);
+  //     throw new HttpException('Products not found', HttpStatus.NOT_FOUND);
+  //   }
+  // }
+
+  // Assuming you have your imports and schema defined as shown previously
+
   async getProducts(
     searchQuery?: string,
     page: number = 1,
@@ -53,7 +97,7 @@ export class ProductsService {
 
       if (searchQuery) {
         const searchKeyRegex = new RegExp(searchQuery, 'i');
-        query['name'] = searchKeyRegex;
+        query['medicineName'] = searchKeyRegex; // Adjust to match your field name
       }
 
       if (userId) {
@@ -65,11 +109,13 @@ export class ProductsService {
 
       const products = await this.productsModel
         .find(query)
+        .populate('category', 'name')
+        .populate('supplier', 'name')
         .skip(skip)
         .limit(pageSize)
         .lean();
 
-      const total = await this.productsModel.countDocuments(products);
+      const total = await this.productsModel.countDocuments(query);
 
       return {
         data: products,
@@ -100,9 +146,13 @@ export class ProductsService {
   }
 
   //get a single product
-  async getSingleProduct(productId: string): Promise<ProductsModel> {
+  async getSingleProduct(productId: string): Promise<any> {
     try {
-      return await this.productsModel.findById(productId);
+      return await this.productsModel
+        .findById(productId)
+        .populate('category', 'name')
+        .populate('supplier', 'name')
+        .populate('brands', 'name');
     } catch (error) {
       console.log(error);
       throw new HttpException('Product not found', HttpStatus.NOT_FOUND);

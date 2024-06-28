@@ -58,9 +58,7 @@ export class ProductsController {
   }
 
   @Get(':productId')
-  async getSingleProduct(
-    @Param('productId') productId: string,
-  ): Promise<ProductsModel> {
+  async getSingleProduct(@Param('productId') productId: string): Promise<any> {
     return await this.productService.getSingleProduct(productId);
   }
 
