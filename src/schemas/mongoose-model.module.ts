@@ -5,6 +5,7 @@ import { Category, CateogrySchema } from './category.schema';
 import { Brands, BrandsSchema } from './brands.schema';
 import { Supplier, SupplierSchema } from './supplier.schema';
 import { Products, ProductsSchema } from './products.schema';
+import { Order, OrderSchema } from './order.schema';
 
 const MODELS = [
   {
@@ -26,6 +27,10 @@ const MODELS = [
   {
     name: Products.name,
     schema: ProductsSchema,
+  },
+  {
+    name: Order.name,
+    schema: OrderSchema,
   },
 ];
 
