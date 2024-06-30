@@ -86,7 +86,7 @@ export class DashboardService {
       const productsQuery: any = {};
 
       if (userId) {
-        orderQuery['user'] = userId;
+        productsQuery['user'] = userId;
       }
 
       const productsData = await this.orderModel
