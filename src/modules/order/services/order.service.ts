@@ -25,6 +25,7 @@ export class OrderService {
       await this.orderModel.create(
         [
           {
+            invoiceNo: orderDetails.invoiceNo,
             user: userId,
             customerDetails: orderDetails.customerDetails,
             cartItems: orderDetails.cartItems,
@@ -69,7 +70,62 @@ export class OrderService {
       await session.abortTransaction();
       session.endSession();
       console.error(error);
-      throw new HttpException('Product stock exist', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Product stock not available',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  //get all orders by user with search and pagination
+  async getOrders(
+    searchQuery?: string,
+    page: number = 1,
+    userId?: string,
+  ): Promise<any> {
+    const query: any = {};
+
+    if (searchQuery) {
+      const searchKeyRegex = new RegExp(searchQuery, 'i');
+      query['$or'] = [
+        { invoiceNo: searchKeyRegex },
+        { 'customerDetails.name': searchKeyRegex },
+        { 'cartItems.name': searchKeyRegex },
+      ];
+    }
+
+    if (userId) {
+      query['user'] = userId;
+    }
+
+    const pageSize = 10;
+    const skip = (page - 1) * pageSize;
+
+    const orders = await this.orderModel
+      .find(query)
+      .skip(skip)
+      .limit(pageSize)
+      .lean();
+
+    const total = await this.orderModel.countDocuments(query);
+
+    return {
+      data: orders,
+      pagination: {
+        total,
+        page,
+        pages: Math.ceil(total / pageSize),
+      },
+    };
+  }
+
+  //get a single order
+  async getSingleOrder(orderId: string): Promise<OrderModel> {
+    try {
+      return await this.orderModel.findById(orderId);
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('Order not found', HttpStatus.NOT_FOUND);
     }
   }
 }

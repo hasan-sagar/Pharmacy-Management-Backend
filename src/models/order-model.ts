@@ -1,6 +1,7 @@
 import { UserModel } from './user-model';
 
 export class OrderModel {
+  invoiceNo: string;
   user?: UserModel['_id'];
   customerDetails: {
     name: string;

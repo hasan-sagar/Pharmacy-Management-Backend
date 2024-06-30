@@ -4,6 +4,9 @@ import { User } from './user.schema';
 
 @Schema({ timestamps: true })
 export class Order {
+  @Prop({ type: String, required: true })
+  invoiceNo: string;
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
   user: User;
 
